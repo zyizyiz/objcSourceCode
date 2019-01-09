@@ -722,13 +722,18 @@ class list_array_tt {
 
         if (hasArray()) {
             // many lists -> many lists
+            // 旧数组的长度
             uint32_t oldCount = array()->count;
+            // 新数组的长度
             uint32_t newCount = oldCount + addedCount;
+            
             setArray((array_t *)realloc(array(), array_t::byteSize(newCount)));
             array()->count = newCount;
-            memmove(array()->lists + addedCount, array()->lists, 
+            // 将原来数组向后移动新数组的长度 比如 : 00000000111111
+            memmove(array()->lists + addedCount, array()->lists,
                     oldCount * sizeof(array()->lists[0]));
-            memcpy(array()->lists, addedLists, 
+            // 将新数组拷贝到旧数组前面 比如 : 22222222111111
+            memcpy(array()->lists, addedLists,
                    addedCount * sizeof(array()->lists[0]));
         }
         else if (!list  &&  addedCount == 1) {
@@ -1378,6 +1383,16 @@ struct swift_class_t : objc_class {
 };
 
 
+/**
+ category(分类)的结构体
+ 可以添加 : 实例方法（成员方法）、类方法、协议、属性（通过关联）
+ 因为没有Ivars，所以不支持实例变量（成员变量）
+ instanceMethods
+ classMethods
+ protocols
+ instanceProperties
+ _classProperties
+ */
 struct category_t {
     const char *name;
     classref_t cls;
