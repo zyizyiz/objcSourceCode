@@ -2541,7 +2541,7 @@ void _read_images(header_info **hList, uint32_t hCount, int totalClasses, int un
 
 
     // Discover classes. Fix up unresolved future classes. Mark bundle classes.
-
+    // 对工程进行优化
     for (EACH_HEADER) {
         classref_t *classlist = _getObjc2ClassList(hi, &count);
         
@@ -2624,7 +2624,7 @@ void _read_images(header_info **hList, uint32_t hCount, int totalClasses, int un
             fixupMessageRef(refs+i);
         }
     }
-
+    
     ts.log("IMAGE TIMES: fix up objc_msgSend_fixup");
 #endif
 

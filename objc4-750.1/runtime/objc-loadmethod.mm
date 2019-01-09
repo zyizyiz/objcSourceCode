@@ -188,6 +188,7 @@ static void call_class_loads(void)
     // Detach current loadable list.
     struct loadable_class *classes = loadable_classes;
     int used = loadable_classes_used;
+    // 赋值完毕置为空，保证只执行一次
     loadable_classes = nil;
     loadable_classes_allocated = 0;
     loadable_classes_used = 0;
@@ -201,6 +202,7 @@ static void call_class_loads(void)
         if (PrintLoading) {
             _objc_inform("LOAD: +[%s load]\n", cls->nameForLogging());
         }
+        // 方法直接调用，不通过objc_msgSend()消息转发
         (*load_method)(cls, SEL_load);
     }
     
@@ -230,6 +232,7 @@ static bool call_category_loads(void)
     struct loadable_category *cats = loadable_categories;
     int used = loadable_categories_used;
     int allocated = loadable_categories_allocated;
+    // 赋值后置为空，确保方法只执行一次
     loadable_categories = nil;
     loadable_categories_allocated = 0;
     loadable_categories_used = 0;

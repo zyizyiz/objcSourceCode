@@ -874,6 +874,7 @@ void _objc_atfork_child()
 
 void _objc_init(void)
 {
+    // 确保只运行一次
     static bool initialized = false;
     if (initialized) return;
     initialized = true;

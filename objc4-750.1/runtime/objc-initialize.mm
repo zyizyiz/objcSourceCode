@@ -369,6 +369,7 @@ void waitForInitializeToComplete(Class cls)
 
 void callInitialize(Class cls)
 {
+    // initialize调用 objc_msgSend()
     ((void(*)(Class, SEL))objc_msgSend)(cls, SEL_initialize);
     asm("");
 }
