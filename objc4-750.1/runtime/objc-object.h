@@ -159,7 +159,7 @@ objc_object::ISA()
     }
     return (Class)isa.bits;
 #else
-    return (Class)(isa.bits & ISA_MASK);
+    return (Class)(isa.bits & ISA_MASK);        // isa地址要经过位运算
 #endif
 }
 

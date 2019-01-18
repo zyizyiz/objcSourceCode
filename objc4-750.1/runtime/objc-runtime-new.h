@@ -560,7 +560,7 @@ struct class_ro_t {
 
     const uint8_t * ivarLayout;
     
-    const char * name;
+    const char * name;                  // 类名
     method_list_t * baseMethodList;
     protocol_list_t * baseProtocols;
     const ivar_list_t * ivars;
@@ -827,17 +827,17 @@ class protocol_array_t :
     }
 };
 
-
+// class_readwrite_table
 struct class_rw_t {
     // Be warned that Symbolication knows the layout of this structure.
     uint32_t flags;
     uint32_t version;
 
-    const class_ro_t *ro;
+    const class_ro_t *ro;               // class_readonly_table
 
-    method_array_t methods;
-    property_array_t properties;
-    protocol_array_t protocols;
+    method_array_t methods;             // 方法信息
+    property_array_t properties;        // 属性信息
+    protocol_array_t protocols;         // 协议信息
 
     Class firstSubclass;
     Class nextSiblingClass;
@@ -1112,7 +1112,8 @@ public:
     }
 };
 
-
+// C++中结构体就相当于类，也可以继承
+// objc_object就存储了isa
 struct objc_class : objc_object {
     // Class ISA;
     Class superclass;
@@ -1332,10 +1333,13 @@ struct objc_class : objc_object {
     }
 
     // Class's ivar size rounded up to a pointer-size boundary.
+    // 内存对齐
     uint32_t alignedInstanceSize() {
         return word_align(unalignedInstanceSize());
     }
 
+    // 对象中实例属性的大小限制在最少为16个字节
+    // extraBytes 一般为0
     size_t instanceSize(size_t extraBytes) {
         size_t size = alignedInstanceSize() + extraBytes;
         // CF requires all objects be at least 16 bytes.
