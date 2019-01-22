@@ -1338,7 +1338,7 @@ struct objc_class : objc_object {
         return word_align(unalignedInstanceSize());
     }
 
-    // 对象中实例属性的大小限制在最少为16个字节
+    // 对象占用的空间限制在最少为16个字节
     // extraBytes 一般为0
     size_t instanceSize(size_t extraBytes) {
         size_t size = alignedInstanceSize() + extraBytes;
