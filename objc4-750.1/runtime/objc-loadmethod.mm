@@ -65,6 +65,7 @@ void add_class_to_loadable_list(Class cls)
 
     loadMethodLock.assertLocked();
 
+    // 获取类的load方法
     method = cls->getLoadMethod();
     if (!method) return;  // Don't bother if cls has no +load method
     
@@ -81,6 +82,7 @@ void add_class_to_loadable_list(Class cls)
                               sizeof(struct loadable_class));
     }
     
+    // 将class和method添加到数组中
     loadable_classes[loadable_classes_used].cls = cls;
     loadable_classes[loadable_classes_used].method = method;
     loadable_classes_used++;
@@ -99,6 +101,7 @@ void add_category_to_loadable_list(Category cat)
 
     loadMethodLock.assertLocked();
 
+    // 获取分类中的load方法
     method = _category_getLoadMethod(cat);
 
     // Don't bother if cat has no +load method
@@ -109,6 +112,7 @@ void add_category_to_loadable_list(Category cat)
                      _category_getClassName(cat), _category_getName(cat));
     }
     
+    // 分配内存
     if (loadable_categories_used == loadable_categories_allocated) {
         loadable_categories_allocated = loadable_categories_allocated*2 + 16;
         loadable_categories = (struct loadable_category *)
@@ -117,6 +121,7 @@ void add_category_to_loadable_list(Category cat)
                               sizeof(struct loadable_category));
     }
 
+    // 添加cat和load到数组中
     loadable_categories[loadable_categories_used].cat = cat;
     loadable_categories[loadable_categories_used].method = method;
     loadable_categories_used++;
@@ -188,7 +193,7 @@ static void call_class_loads(void)
     // Detach current loadable list.
     struct loadable_class *classes = loadable_classes;
     int used = loadable_classes_used;
-    // 赋值完毕置为空，保证只执行一次
+    // 赋值完毕置为空，保证只执行一次，释放
     loadable_classes = nil;
     loadable_classes_allocated = 0;
     loadable_classes_used = 0;
@@ -352,11 +357,13 @@ void call_load_methods(void)
 
     do {
         // 1. Repeatedly call class +loads until there aren't any more
+        // 1. 加载类中的load方法
         while (loadable_classes_used > 0) {
             call_class_loads();
         }
 
         // 2. Call category +loads ONCE
+        // 2. 加载分类类中的load方法
         more_categories = call_category_loads();
 
         // 3. Run more +loads if there are classes OR more untried categories

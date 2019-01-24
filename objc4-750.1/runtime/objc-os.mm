@@ -227,6 +227,7 @@ static header_info * addHeader(const headerType *mhdr, const char *path, int &to
     bool inSharedCache = false;
 
     // Look for hinfo from the dyld shared cache.
+    // 欲优化
     hi = preoptimizedHinfoForHeader(mhdr);
     if (hi) {
         // Found an hinfo in the dyld shared cache.
@@ -871,7 +872,7 @@ void _objc_atfork_child()
 * Bootstrap initialization. Registers our image notifier with dyld.
 * Called by libSystem BEFORE library initialization time
 **********************************************************************/
-
+// 程序启动的入口
 void _objc_init(void)
 {
     // 确保只运行一次

@@ -2183,6 +2183,7 @@ load_images(const char *path __unused, const struct mach_header *mh)
     // Discover load methods
     {
         mutex_locker_t lock2(runtimeLock);
+        // 准备加载load方法
         prepare_load_methods((const headerType *)mh);
     }
 
@@ -2848,8 +2849,9 @@ static void schedule_class_load(Class cls)
     if (cls->data()->flags & RW_LOADED) return;
 
     // Ensure superclass-first ordering
+    // 首先加载父类的load方法
     schedule_class_load(cls->superclass);
-
+    // 添加load方法到list
     add_class_to_loadable_list(cls);
     cls->setInfo(RW_LOADED); 
 }
@@ -2872,6 +2874,7 @@ void prepare_load_methods(const headerType *mhdr)
     classref_t *classlist = 
         _getObjc2NonlazyClassList(mhdr, &count);
     for (i = 0; i < count; i++) {
+        // 遍历所有类中的load方法
         schedule_class_load(remapClass(classlist[i]));
     }
 
