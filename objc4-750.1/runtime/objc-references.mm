@@ -273,8 +273,10 @@ void _object_set_associative_reference(id object, void *key, id value, uintptr_t
     ObjcAssociation old_association(0, nil);
     id new_value = value ? acquireValue(value, policy) : nil;
     {
+        // 使用associationsManager进行管理
         AssociationsManager manager;
         AssociationsHashMap &associations(manager.associations());
+        // 将传进来的object进行处理，避免循环引用
         disguised_ptr_t disguised_object = DISGUISE(object);
         if (new_value) {
             // break any existing association.
@@ -292,7 +294,9 @@ void _object_set_associative_reference(id object, void *key, id value, uintptr_t
             } else {
                 // create the new association (first time).
                 ObjectAssociationMap *refs = new ObjectAssociationMap;
+                // 用传进来的object处理后的值当过key，map当作value
                 associations[disguised_object] = refs;
+                // map存储的是以policy策略为key，并且以传进来的值为value
                 (*refs)[key] = ObjcAssociation(policy, new_value);
                 object->setHasAssociatedObjects();
             }
