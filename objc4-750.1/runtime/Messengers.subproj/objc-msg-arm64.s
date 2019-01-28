@@ -230,7 +230,7 @@ LExit$0:
 .endif
 .endmacro
 
-.macro CacheLookup
+.macro CacheLookup      // 宏定义
 	// p1 = SEL, p16 = isa
 	ldp	p10, p11, [x16, #CACHE]	// p10 = buckets, p11 = occupied|mask
 #if !__LP64__
@@ -299,11 +299,12 @@ _objc_debug_taggedpointer_ext_classes:
 	.fill 256, 8, 0
 #endif
 
-	ENTRY _objc_msgSend
+	ENTRY _objc_msgSend     // 消息发送入口 objc_msgSend
 	UNWIND _objc_msgSend, NoFrame
 
 	cmp	p0, #0			// nil check and tagged pointer check
 #if SUPPORT_TAGGED_POINTERS
+# 判断消息接收者是否为空
 	b.le	LNilOrTagged		//  (MSB tagged pointer looks negative)
 #else
 	b.eq	LReturnZero
@@ -343,7 +344,7 @@ LReturnZero:
 	movi	d1, #0
 	movi	d2, #0
 	movi	d3, #0
-	ret
+	ret     // 如果消息接收者为空，直接返回
 
 	END_ENTRY _objc_msgSend
 
@@ -456,7 +457,7 @@ LLookup_Nil:
 
 	// receiver and selector already in x0 and x1
 	mov	x2, x16
-	bl	__class_lookupMethodAndLoadCache3
+	bl	__class_lookupMethodAndLoadCache3   //  调用C语言的_class_lookupMethodAndLoadCache3方法
 
 	// IMP in x0
 	mov	x17, x0

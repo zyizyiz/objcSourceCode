@@ -4707,9 +4707,11 @@ static method_t *search_method_list(const method_list_t *mlist, SEL sel)
     int methodListHasExpectedSize = mlist->entsize() == sizeof(method_t);
     
     if (__builtin_expect(methodListIsFixedUp && methodListHasExpectedSize, 1)) {
+        // 二分查找
         return findMethodInSortedMethodList(sel, mlist);
     } else {
         // Linear search of unsorted method list
+        // 遍历查找
         for (auto& meth : *mlist) {
             if (meth.name == sel) return &meth;
         }
@@ -4905,14 +4907,16 @@ IMP lookUpImpOrForward(Class cls, SEL sel, id inst,
     runtimeLock.assertLocked();
 
     // Try this class's cache.
-
+    // 从当前类对象中的方法缓存查找方法
     imp = cache_getImp(cls, sel);
     if (imp) goto done;
 
     // Try this class's method lists.
+    // 从当前类对象中的方法列表查找方法
     {
         Method meth = getMethodNoSuper_nolock(cls, sel);
         if (meth) {
+            // 将查找到的方法加入到当前类对象的方法缓存中
             log_and_fill_cache(cls, meth->imp, sel, inst, cls);
             imp = meth->imp;
             goto done;
@@ -4920,6 +4924,7 @@ IMP lookUpImpOrForward(Class cls, SEL sel, id inst,
     }
 
     // Try superclass caches and method lists.
+    // 从父类中的方法缓存和方法列表中查找方法
     {
         unsigned attempts = unreasonableClassCount();
         for (Class curClass = cls->superclass;
@@ -4958,7 +4963,7 @@ IMP lookUpImpOrForward(Class cls, SEL sel, id inst,
     }
 
     // No implementation found. Try method resolver once.
-
+    // 没找到实现方法并且从未进行动态解析时，则进入动态解析
     if (resolver  &&  !triedResolver) {
         runtimeLock.unlock();
         _class_resolveMethod(cls, sel, inst);
