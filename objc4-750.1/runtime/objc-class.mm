@@ -661,6 +661,7 @@ void _class_resolveMethod(Class cls, SEL sel, id inst)
 {
     if (! cls->isMetaClass()) {
         // try [cls resolveInstanceMethod:sel]
+        // 调用[cls resolveInstanceMethod:sel]方法，即需要在类中实现该方法
         _class_resolveInstanceMethod(cls, sel, inst);
     } 
     else {

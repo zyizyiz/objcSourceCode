@@ -4963,7 +4963,7 @@ IMP lookUpImpOrForward(Class cls, SEL sel, id inst,
     }
 
     // No implementation found. Try method resolver once.
-    // 没找到实现方法并且从未进行动态解析时，则进入动态解析
+    // 没找到实现方法并且从未进行动态方法解析时，则进入动态方法解析
     if (resolver  &&  !triedResolver) {
         runtimeLock.unlock();
         _class_resolveMethod(cls, sel, inst);
@@ -4971,6 +4971,7 @@ IMP lookUpImpOrForward(Class cls, SEL sel, id inst,
         // Don't cache the result; we don't hold the lock so it may have 
         // changed already. Re-do the search from scratch instead.
         triedResolver = YES;
+        // 重新进入消息发送
         goto retry;
     }
 
