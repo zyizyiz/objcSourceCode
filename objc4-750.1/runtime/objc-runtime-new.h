@@ -57,9 +57,9 @@ public:
 
 
 struct cache_t {
-    struct bucket_t *_buckets;
-    mask_t _mask;
-    mask_t _occupied;
+    struct bucket_t *_buckets;  // 散列表
+    mask_t _mask;       // buckets 的长度-1
+    mask_t _occupied;   // 已缓存的方法数量
 
 public:
     struct bucket_t *buckets();
@@ -218,11 +218,11 @@ struct entsize_list_tt {
     };
 };
 
-
+// 方法的结构体
 struct method_t {
-    SEL name;
-    const char *types;
-    MethodListIMP imp;
+    SEL name;           // 方法名
+    const char *types;  // 返回值
+    MethodListIMP imp;  // 实现地址
 
     struct SortBySELAddress :
         public std::binary_function<const method_t&,
@@ -234,6 +234,7 @@ struct method_t {
     };
 };
 
+// 成员变量的结构体
 struct ivar_t {
 #if __x86_64__
     // *offset was originally 64-bit on some x86_64 platforms.
@@ -244,8 +245,8 @@ struct ivar_t {
     // offset for their benefit.
 #endif
     int32_t *offset;
-    const char *name;
-    const char *type;
+    const char *name;   // 成员变量的名字
+    const char *type;   // 成员变量的类型
     // alignment is sometimes -1; use alignment() instead
     uint32_t alignment_raw;
     uint32_t size;
@@ -561,8 +562,8 @@ struct class_ro_t {
     const uint8_t * ivarLayout;
     
     const char * name;                  // 类名
-    method_list_t * baseMethodList;
-    protocol_list_t * baseProtocols;
+    method_list_t * baseMethodList;     // 当前类原来的方法
+    protocol_list_t * baseProtocols;    // 当前类原来的协议
     const ivar_list_t * ivars;
 
     const uint8_t * weakIvarLayout;
@@ -1398,14 +1399,15 @@ struct swift_class_t : objc_class {
  _classProperties
  */
 struct category_t {
-    const char *name;
+    // 没有ivars 成员变量 所有不能添加成员变量
+    const char *name;                               // 分类的名称
     classref_t cls;
-    struct method_list_t *instanceMethods;
-    struct method_list_t *classMethods;
-    struct protocol_list_t *protocols;
-    struct property_list_t *instanceProperties;
+    struct method_list_t *instanceMethods;          // 实例方法
+    struct method_list_t *classMethods;             // 类方法
+    struct protocol_list_t *protocols;              // 协议
+    struct property_list_t *instanceProperties;     // 实例属性
     // Fields below this point are not always present on disk.
-    struct property_list_t *_classProperties;
+    struct property_list_t *_classProperties;       // 类属性
 
     method_list_t *methodsForMeta(bool isMeta) {
         if (isMeta) return classMethods;

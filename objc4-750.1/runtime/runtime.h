@@ -54,7 +54,7 @@ typedef struct objc_property *objc_property_t;
 
 struct objc_class {
     Class _Nonnull isa  OBJC_ISA_AVAILABILITY;
-
+// 不会被使用
 #if !__OBJC2__
     Class _Nullable super_class                              OBJC2_UNAVAILABLE;
     const char * _Nonnull name                               OBJC2_UNAVAILABLE;
