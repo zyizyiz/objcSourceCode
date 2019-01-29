@@ -416,11 +416,11 @@ LLookup_Nil:
 
 	// no _objc_msgLookupSuper
 
-	ENTRY _objc_msgSendSuper2
+	ENTRY _objc_msgSendSuper2       // super关键字调用的方法
 	UNWIND _objc_msgSendSuper2, NoFrame
 
 	ldp	p0, p16, [x0]		// p0 = real receiver, p16 = class
-	ldr	p16, [x16, #SUPERCLASS]	// p16 = class->superclass
+	ldr	p16, [x16, #SUPERCLASS]	// p16 = class->superclass  调用当前类的superclass
 	CacheLookup NORMAL
 
 	END_ENTRY _objc_msgSendSuper2

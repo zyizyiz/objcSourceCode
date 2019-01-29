@@ -220,6 +220,7 @@ OBJC_EXPORT struct objc_cache _objc_empty_cache
 
 #if __OBJC2__
 // objc_msgSendSuper2() takes the current search class, not its superclass.
+// super 的真实方法调用  结构体中的class不是superclass 是它的类对象 在汇编中对调用它的superclass
 OBJC_EXPORT id _Nullable
 objc_msgSendSuper2(struct objc_super * _Nonnull super, SEL _Nonnull op, ...)
     OBJC_AVAILABLE(10.6, 2.0, 9.0, 1.0, 2.0);

@@ -98,6 +98,15 @@ objc_msgSend(id _Nullable self, SEL _Nonnull op, ...)
  * 
  * @see objc_msgSend
  */
+
+/*
+ struct objc_super {
+ /// Specifies an instance of a class.  消息接收者
+ __unsafe_unretained _Nonnull id receiver;
+ /// 父类
+__unsafe_unretained _Nonnull Class super_class;
+};
+ */
 OBJC_EXPORT id _Nullable
 objc_msgSendSuper(struct objc_super * _Nonnull super, SEL _Nonnull op, ...)
     OBJC_AVAILABLE(10.0, 2.0, 9.0, 1.0, 2.0);
