@@ -57,13 +57,13 @@ enum {
 
 /* Run Loop Observer Activities */
 typedef CF_OPTIONS(CFOptionFlags, CFRunLoopActivity) {
-    kCFRunLoopEntry = (1UL << 0),
-    kCFRunLoopBeforeTimers = (1UL << 1),
-    kCFRunLoopBeforeSources = (1UL << 2),
-    kCFRunLoopBeforeWaiting = (1UL << 5),
-    kCFRunLoopAfterWaiting = (1UL << 6),
-    kCFRunLoopExit = (1UL << 7),
-    kCFRunLoopAllActivities = 0x0FFFFFFFU
+    kCFRunLoopEntry = (1UL << 0),           //  即将进入runloop
+    kCFRunLoopBeforeTimers = (1UL << 1),    //  即将处理Timer
+    kCFRunLoopBeforeSources = (1UL << 2),   //  即将处理Source
+    kCFRunLoopBeforeWaiting = (1UL << 5),   //  即将进入休眠
+    kCFRunLoopAfterWaiting = (1UL << 6),    //  从休眠中唤醒
+    kCFRunLoopExit = (1UL << 7),            //  即将退出runloop
+    kCFRunLoopAllActivities = 0x0FFFFFFFU   //  所有的状态
 };
 
 CF_EXPORT const CFStringRef kCFRunLoopDefaultMode;

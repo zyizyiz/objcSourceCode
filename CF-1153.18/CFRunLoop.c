@@ -527,10 +527,10 @@ struct __CFRunLoopMode {
     CFStringRef _name;
     Boolean _stopped;
     char _padding[3];
-    CFMutableSetRef _sources0;
-    CFMutableSetRef _sources1;
-    CFMutableArrayRef _observers;
-    CFMutableArrayRef _timers;
+    CFMutableSetRef _sources0;      //  触摸事件处理，performSelector:onThread:
+    CFMutableSetRef _sources1;      //  基于Port的进程间通信，系统事件捕捉
+    CFMutableArrayRef _observers;   //  监听Runloop状态，UI刷新（BeforeWaiting），AutoRelease popl(BeforeWaiting)
+    CFMutableArrayRef _timers;      //  NSTimer、performSelector:withObject:afterDelay:
     CFMutableDictionaryRef _portToV1SourceMap;
     __CFPortSet _portSet;
     CFIndex _observerMask;
@@ -634,6 +634,7 @@ typedef struct _per_run_data {
     uint32_t ignoreWakeUps;
 } _per_run_data;
 
+// Runloop结构体
 struct __CFRunLoop {
     CFRuntimeBase _base;
     pthread_mutex_t _lock;			/* locked for accessing mode list */
