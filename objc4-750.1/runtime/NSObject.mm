@@ -1985,6 +1985,7 @@ void arr_init(void)
     return self;
 }
 
+// class 就是返回self的类对象或者元类对象
 - (Class)class {
     return object_getClass(self);
 }
@@ -1993,6 +1994,7 @@ void arr_init(void)
     return self->superclass;
 }
 
+// superclass 就是返回self的父类
 - (Class)superclass {
     return [self class]->superclass;
 }
