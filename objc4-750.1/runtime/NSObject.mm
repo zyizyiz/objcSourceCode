@@ -940,6 +940,7 @@ class AutoreleasePoolPage
         assert(page == hotPage());
         assert(page->full()  ||  DebugPoolAllocation);
 
+        // 如果page满了，就新创建一个Page对象
         do {
             if (page->child) page = page->child;
             else page = new AutoreleasePoolPage(page);
@@ -1020,6 +1021,7 @@ public:
     static inline void *push() 
     {
         id *dest;
+        // 将POOL_BOUNDARY压入栈，作为除page成员变量外最前的一个变量
         if (DebugPoolAllocation) {
             // Each autorelease pool starts on a new pool page.
             dest = autoreleaseNewPage(POOL_BOUNDARY);
@@ -1827,6 +1829,7 @@ _objc_rootHash(id obj)
     return (uintptr_t)obj;
 }
 
+// autoreleasePool原理
 void *
 objc_autoreleasePoolPush(void)
 {

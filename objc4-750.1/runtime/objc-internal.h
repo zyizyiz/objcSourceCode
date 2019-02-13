@@ -340,6 +340,7 @@ _objc_getTaggedPointerSignedValue(const void * _Nullable ptr);
 #define _OBJC_TAG_EXT_SLOT_COUNT 256
 #define _OBJC_TAG_EXT_SLOT_MASK 0xff
 
+// 如果是iPhone
 #if OBJC_MSB_TAGGED_POINTERS
 #   define _OBJC_TAG_MASK (1UL<<63)
 #   define _OBJC_TAG_INDEX_SHIFT 60

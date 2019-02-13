@@ -90,7 +90,7 @@ objc_object::getIsa()
     }
 }
 
-
+// 判断是否是taggedPointer
 inline bool 
 objc_object::isTaggedPointer() 
 {
