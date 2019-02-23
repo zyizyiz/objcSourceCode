@@ -39,8 +39,8 @@ private:
     // IMP-first is better for arm64e ptrauth and no worse for arm64.
     // SEL-first is better for armv7* and i386 and x86_64.
 #if __arm64__
-    MethodCacheIMP _imp;
-    cache_key_t _key;
+    MethodCacheIMP _imp;    // 函数的内存地址
+    cache_key_t _key;       // SEL作为key
 #else
     cache_key_t _key;
     MethodCacheIMP _imp;
@@ -220,7 +220,7 @@ struct entsize_list_tt {
 
 // 方法的结构体
 struct method_t {
-    SEL name;           // 方法名
+    SEL name;           // 方法名 底层结构跟 char *类似
     const char *types;  // 返回值
     MethodListIMP imp;  // 实现地址
 
@@ -834,8 +834,9 @@ struct class_rw_t {
     uint32_t flags;
     uint32_t version;
 
-    const class_ro_t *ro;               // class_readonly_table
+    const class_ro_t *ro;               // class_readonly_table 存储当前类原本的信息
 
+    // 二维数组
     method_array_t methods;             // 方法信息
     property_array_t properties;        // 属性信息
     protocol_array_t protocols;         // 协议信息
@@ -1115,12 +1116,15 @@ public:
 
 // C++中结构体就相当于类，也可以继承
 // objc_object就存储了isa
+// class的类结构
+// objc_object 就存储了isa指针
 struct objc_class : objc_object {
     // Class ISA;
-    Class superclass;
-    cache_t cache;             // formerly cache pointer and vtable
-    class_data_bits_t bits;    // class_rw_t * plus custom rr/alloc flags
+    Class superclass;           // 父类
+    cache_t cache;             // formerly cache pointer and vtable 方法缓存
+    class_data_bits_t bits;    // class_rw_t * plus custom rr/alloc flags 获取具体的类信息
 
+    // bits做一次位运算获得class_rw_t
     class_rw_t *data() { 
         return bits.data();
     }

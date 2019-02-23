@@ -89,9 +89,10 @@ typedef objc::DenseMap<DisguisedPtr<objc_object>,size_t,true> RefcountMap;
 enum HaveOld { DontHaveOld = false, DoHaveOld = true };
 enum HaveNew { DontHaveNew = false, DoHaveNew = true };
 
+// 若isa指针中存放不下引用计数，则将会把引用计数存放在SideTable中，并将isa中的has_sidetable_rc置为1
 struct SideTable {
     spinlock_t slock;
-    RefcountMap refcnts;
+    RefcountMap refcnts;        // 存放着对象引用计数的散列表
     weak_table_t weak_table;
 
     SideTable() {

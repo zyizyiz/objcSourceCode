@@ -58,6 +58,7 @@ namespace {
 
 #include "isa.h"
 
+// 共同体，使用位域存储更多的信息
 union isa_t {
     isa_t() { }
     isa_t(uintptr_t value) : bits(value) { }
@@ -67,6 +68,26 @@ union isa_t {
 #if defined(ISA_BITFIELD)
     struct {
         ISA_BITFIELD;  // defined in isa.h
+        
+//        // 是否是优化后的指针 0 不是 1 是
+//        uintptr_t nonpointer        : 1;                                         \
+//        // 是否设置关联过对象
+//        uintptr_t has_assoc         : 1;                                         \
+          // 是否有c++的析构函数
+//        uintptr_t has_cxx_dtor      : 1;                                         \
+        // 存储着Class、Meta-Class对象的内存地址信息
+//        uintptr_t shiftcls          : 44; /*MACH_VM_MAX_ADDRESS 0x7fffffe00000*/ \
+        // 用于在调试时分辨对象是否未完成初始化
+//        uintptr_t magic             : 6;                                         \
+        // 是否有被弱引用指向过
+//        uintptr_t weakly_referenced : 1;                                         \
+        // 对象是否正在释放
+//        uintptr_t deallocating      : 1;                                         \
+        // 引用计数器是否过大无法存储在isa中
+        // 如果为1，那么引用计数会存储在一个叫SideTable的类的属性中
+//        uintptr_t has_sidetable_rc  : 1;                                         \
+        // 里面存储的值是引用计数器减1
+//        uintptr_t extra_rc          : 8
     };
 #endif
 };
